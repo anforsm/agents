@@ -1,4 +1,4 @@
-from .tools import clone_repo as tclone_repo
+from .tools import clone_repo as _clone_repo
 
 from pydantic_ai import Agent, RunContext
 
@@ -9,6 +9,6 @@ agent = Agent(
 
 @agent.tool
 def clone_repo(ctx: RunContext, repo_url: str):
-    return tclone_repo(repo_url)
+    return _clone_repo(repo_url)
 
 print(agent.run_sync("Clone anforsm/helloworld").data)
