@@ -10,5 +10,8 @@ dependencies = [
     "langchain-anthropic>=0.3.7",
     "langchain-core>=0.3.35",
     "langgraph>=0.2.73",
+    "pydantic>=2.10.6",
+    "pydantic-ai>=0.0.24",
+    "smolagents>=1.9.2",
     "typing-extensions>=4.12.2",
 ]

@@ -11,10 +11,11 @@ from langgraph.graph import StateGraph
 from langgraph.graph.message import add_messages
 from langgraph.prebuilt import ToolNode, tools_condition
 from langgraph.checkpoint.memory import MemorySaver
+from langgraph.utils.config import RunnableConfig
 
 tools = [clone_repo]
 
-llm = ChatAnthropic(model_name="claude-3-5-sonnet-20241022").bind_tools(tools)
+llm = ChatAnthropic(model_name="claude-3-5-sonnet-20241022", timeout=None, stop=None).bind_tools(tools)
 
 class State(TypedDict):
     messages: Annotated[list, add_messages]
@@ -37,7 +38,7 @@ graph = graph_builder.compile(checkpointer=memory)
 
 
 def stream_graph_updates(user_input: str):
-    config = {"configurable": {"thread_id": "1"}}
+    config: RunnableConfig = {"configurable": {"thread_id": "1"}}
     events = graph.stream(
         {
             "messages": [
