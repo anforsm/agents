@@ -1,14 +1,9 @@
-from .tools import clone_repo as _clone_repo
-
-from pydantic_ai import Agent, RunContext
-
+from .tools import clone_repo
+from pydantic_ai import Agent
 
 agent = Agent(
-    model="anthropic:claude-3-5-sonnet-latest"
+    model="anthropic:claude-3-5-sonnet-latest",
+    tools=[clone_repo]
 )
 
-@agent.tool
-def clone_repo(ctx: RunContext, repo_url: str):
-    return _clone_repo(repo_url)
-
-print(agent.run_sync("Clone anforsm/helloworld").data)
+print(agent.run_sync("Clone anforsm/helloworld").all_messages())
