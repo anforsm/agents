@@ -24,7 +24,7 @@ Clone this github repo: https://github.com/anforsm/helloworld
 * clone_repo
 
 ## Task 2
-How many files or directories are there in the root repository?
+How many files or directories are there in the root directory?
 
 ### Tool Use:
 * clone_repo

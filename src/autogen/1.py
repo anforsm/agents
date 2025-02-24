@@ -31,16 +31,5 @@ async def simple_test() -> None:
     response = await agent.on_messages([TextMessage(content=prompt, source="user")], CancellationToken())
     print(response)
 
-user_proxy = UserProxyAgent("user_proxy")
-agent_team = RoundRobinGroupChat(
-    participants=[user_proxy, agent],
-    termination_condition=TextMentionTermination("TERMINATE")
-)
-
 if __name__ == "__main__":
-    config = agent_team.dump_component()
-    with open("config.json", "w") as f:
-        f.write(config.model_dump_json())
-
-    #asyncio.run(simple_test())
-    #asyncio.run(agent_team.run())
+    asyncio.run(simple_test())

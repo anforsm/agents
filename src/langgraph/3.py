@@ -1,5 +1,5 @@
-from .tools import clone_repo, ls
-from .run_graph import run_graph
+from .tools import clone_repo, ls, cat, write_file
+from .run_graph import run_graph, save_to_image
 
 from dotenv import load_dotenv
 import os
@@ -16,7 +16,8 @@ from langgraph.graph.message import add_messages
 from langgraph.prebuilt import ToolNode, tools_condition
 from langgraph.checkpoint.memory import MemorySaver
 
-tools = [clone_repo, ls]
+
+tools = [clone_repo, ls, cat, write_file]
 
 llm = ChatAnthropic(model_name="claude-3-5-sonnet-20241022", timeout=None, stop=None).bind_tools(tools)
 
@@ -42,4 +43,8 @@ graph = graph_builder.compile(checkpointer=memory)
 print(__name__)
 
 if __name__ == "__main__":
-    run_graph(graph, "How many files are in the root of the anforsm/helloworld github repository?")
+    run_graph(graph,
+        """In the anforsm/helloworld github repo, change the backend url to backend.com instead."""
+    )
+
+    save_to_image(graph)

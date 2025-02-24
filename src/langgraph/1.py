@@ -1,7 +1,12 @@
 from .tools import clone_repo
+from .run_graph import run_graph
 
 from typing import Annotated
 from typing_extensions import TypedDict
+
+from dotenv import load_dotenv
+import os
+load_dotenv("/Users/anton/Documents/GitHub/agents/src/langgraph/.env")
 
 from langchain_anthropic import ChatAnthropic
 from langchain_core.messages.ai import AIMessage
@@ -25,40 +30,21 @@ def chatbot(state: State):
 
 
 tool_node = ToolNode(tools=tools)
+
+
+
 graph_builder = StateGraph(State)
 graph_builder.add_node("chatbot", chatbot)
 graph_builder.add_node("tools", tool_node)
 
 graph_builder.add_conditional_edges("chatbot", tools_condition)
 graph_builder.add_edge("tools", "chatbot")
+
 graph_builder.set_entry_point("chatbot")
 
 memory = MemorySaver()
 graph = graph_builder.compile(checkpointer=memory)
 
 
-def stream_graph_updates(user_input: str):
-    config: RunnableConfig = {"configurable": {"thread_id": "1"}}
-    events = graph.stream(
-        {
-            "messages": [
-                {
-                    "role": "system",
-                    "content": """You are a helpful assistant :)"""
-                },
-                {
-                    "role": "user",
-                    "content": user_input
-                }
-            ]
-        },
-        config=config,
-        stream_mode="values",
-    )
-    for event in events:
-        for value in event.values():
-            message = value[-1]
-            message.pretty_print()
-
 if __name__ == "__main__":
-    stream_graph_updates("Clone anforsm/helloworld")
+    run_graph(graph, "Clone anforsm/helloworld")

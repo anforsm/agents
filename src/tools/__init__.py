@@ -1,9 +1,11 @@
 import os
 import git
 
+BASE_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), ".resources")
+os.makedirs(BASE_PATH, exist_ok=True)
+
 def clone_repo(ssh_url):
-    current_dir = os.path.abspath(__file__)
-    clone_dir = os.path.join(os.path.dirname(os.path.dirname(current_dir)), ".resources")
+    clone_dir = BASE_PATH
 
     # Determine default clone directory if not provided
     repo_name = os.path.basename(ssh_url).replace('.git', '')
@@ -14,13 +16,18 @@ def clone_repo(ssh_url):
     return repo_name
 
 def ls(path):
-    current_dir = os.path.abspath(__file__)
-    work_dir = os.path.join(os.path.dirname(os.path.dirname(current_dir)), ".resources")
-    dir = os.path.join(work_dir, path)
-
+    dir = os.path.join(BASE_PATH, path)
     return os.popen(f"ls {dir}").read()
 
+def cat(path):
+    file_path = os.path.join(BASE_PATH, path)
+    return os.popen(f"cat {file_path}").read()
 
+def write_file(path, content):
+    file_path = os.path.join(BASE_PATH, path)
+    with open(file_path, 'w') as file:
+        file.write(content)
+    return file_path
 
 if __name__ == "__main__":
     clone_repo("git@github.com:anforsm/helloworld.git")
