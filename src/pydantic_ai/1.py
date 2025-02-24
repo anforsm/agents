@@ -1,5 +1,7 @@
 from .tools import clone_repo
 from pydantic_ai import Agent
+import logfire
+logfire.configure()
 
 agent = Agent(
     model="anthropic:claude-3-5-sonnet-latest",

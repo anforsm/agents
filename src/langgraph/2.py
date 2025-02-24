@@ -1,5 +1,6 @@
 
 from .tools import clone_repo, ls
+from .run_graph import run_graph
 
 from typing import Annotated
 from typing_extensions import TypedDict
@@ -12,7 +13,6 @@ from langgraph.graph import StateGraph
 from langgraph.graph.message import add_messages
 from langgraph.prebuilt import ToolNode, tools_condition
 from langgraph.checkpoint.memory import MemorySaver
-from langgraph.utils.config import RunnableConfig
 
 tools = [clone_repo, ls]
 
@@ -37,29 +37,7 @@ graph_builder.set_entry_point("chatbot")
 memory = MemorySaver()
 graph = graph_builder.compile(checkpointer=memory)
 
-
-def stream_graph_updates(user_input: str):
-    config: RunnableConfig = {"configurable": {"thread_id": "1"}}
-    events = graph.stream(
-        {
-            "messages": [
-                {
-                    "role": "system",
-                    "content": """You are a helpful assistant :)"""
-                },
-                {
-                    "role": "user",
-                    "content": user_input
-                }
-            ]
-        },
-        config=config,
-        stream_mode="values",
-    )
-    for event in events:
-        for value in event.values():
-            message = value[-1]
-            message.pretty_print()
+print(__name__)
 
 if __name__ == "__main__":
-    stream_graph_updates("How many files are in the root of the anforsm/helloworld github repository?")
+    run_graph(graph, "How many files are in the root of the anforsm/helloworld github repository?")
